@@ -37,3 +37,7 @@ pnpm-debug.log*
 
 # Optional: OS or editor specific
 Thumbs.db
+
+# DB Files
+data.json
+pending.json

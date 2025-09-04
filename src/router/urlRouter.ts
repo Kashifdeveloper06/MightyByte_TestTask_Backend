@@ -12,7 +12,7 @@ urlRouter.post("/url", async (req: Request, res: Response) => {
   return res.status(200).json({ message: "url saved" })
 })
 
-urlRouter.get(":code", async (req: Request, res: Response) => {
+urlRouter.get("/:code", async (req: Request, res: Response) => {
   const code = req.params.code
   const original = await getOriginalUrl(code)
   if (!original) {
