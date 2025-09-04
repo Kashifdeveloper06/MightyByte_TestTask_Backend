@@ -1,5 +1,6 @@
 import fs from "fs/promises"
 import { WebSocket } from "ws"
+import cron from "node-cron"
 
 const filePath = "./data.json"
 const pendingFilePath = "./pending.json"
@@ -31,7 +32,7 @@ interface PendingMessage {
     for (const [messageId, msg] of Object.entries(pending)) {
       pendingDeliveries.set(messageId, msg as PendingMessage)
     }
-  } catch {}
+  } catch { }
 })()
 
 export async function saveMapping(code: string, url: string) {
@@ -114,10 +115,10 @@ export async function sendShortenedUrlToClient(clientId: string, shortenedUrl: s
   await deliverMessage(messageId)
 }
 
-setInterval(async () => {
+cron.schedule("* * * * *", async () => {
   const now = Date.now()
-  const retryDelay = 30 * 1000 
-  
+  const retryDelay = 30 * 1000
+
   for (const [messageId, pending] of pendingDeliveries.entries()) {
     const timeSinceLastAttempt = now - pending.lastAttempt
     const shouldRetry = timeSinceLastAttempt > retryDelay && pending.attempts < pending.maxRetries
@@ -129,4 +130,4 @@ setInterval(async () => {
       savePendingDeliveries()
     }
   }
-}, 60 * 1000) 
+})
