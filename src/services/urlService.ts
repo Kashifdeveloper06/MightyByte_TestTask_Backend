@@ -3,7 +3,7 @@ import { saveMapping, findUrl, sendShortenedUrlToClient } from "../storage/stora
 
 export async function shortenUrl(url: string, clientId: string) {
   const code = generateCode(10)
-  const shortened = `http://localhost:3000/${code}`
+  const shortened = `${process.env.BASE_URL}/${code}`
   await saveMapping(code, url)
   sendShortenedUrlToClient(clientId, shortened)
   return shortened
